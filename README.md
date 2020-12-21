@@ -14,10 +14,10 @@
 
 ## Usage
 1. Make input file for integrate model
-Hard dataset already processed is contained in [dataset/hard_dataset](https://github.com/Njk-901aru/multiDTI/dataset/hard_dataset) except for 'protein.npy'(protein onehot).
-Easy dataset and middle dataset is saved as input files (csv format) that haven't preprocessed yet in [dataset/easy_dataset](https://github.com/Njk-901aru/multiDTI/dataset/easy_dataset) and [dataset/middle_dataset](https://github.com/Njk-901aru/multiDTI/dataset/middle_dataset). 
+Hard dataset already processed is contained in [dataset/hard_dataset](https://github.com/Njk-901aru/multiDTI/blob/master/dataset/hard_dataset) except for 'protein.npy'(protein onehot).
+Easy dataset and middle dataset is saved as input files (csv format) that haven't preprocessed yet in [dataset/easy_dataset](https://github.com/Njk-901aru/multiDTI/blob/master/dataset/easy_dataset) and [dataset/middle_dataset](https://github.com/Njk-901aru/multiDTI/blob/master/dataset/middle_dataset). 
 
-1.1 run [preprocessed_dataset.py](https://github.com/Njk-901aru/multiDTI/dataset/preprocessed_dataset.py)
+1.1 run [preprocessed_dataset.py](https://github.com/Njk-901aru/multiDTI/blob/master/dataset/preprocessed_dataset.py)
 
 ```bash
 python preprocessed_dataset.py --input <INPUT_FILE>
