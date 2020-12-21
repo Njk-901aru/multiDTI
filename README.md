@@ -76,7 +76,7 @@ python omics_protein.py
   ```
   `<FILEPATH>` './hard_dataset'
   
-  `<DATA>` '/test'
+  `<DATA>` './test'
   
   - Learn
   ```bash
