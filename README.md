@@ -39,10 +39,10 @@ python omics_compound.py
 ```
 chemical_chemical_interaction.csv (multi-interactome data) is setteing as default input file.
 
-2.2 run omics_protein.py
+2.2 run [omics_protein.py](https://github.com/Njk-901aru/multiDTI/data_multi/omics_protein.py)
 
 ```bash
-python [omics_protein.py](https://github.com/Njk-901aru/multiDTI/data_multi/omics_protein.py)
+python omics_protein.py
 ```
 protein_protein_interaction.csv (multi-interactome data) is setteing as default input file.
 
@@ -64,15 +64,15 @@ python omics_protein.py
   cd /path/to/multiDTI/dataset
   python preprocessed_dataset.py --input <FILEPATH> --data <DATA>
   ```
-  `FILEPATH` [./dataset/hard_dataset](https://github.com/Njk-901aru/multiDTI/dataset/hard_dataset)
-  `DATA` train.csv
+  `<FILEPATH>` [./dataset/hard_dataset](https://github.com/Njk-901aru/multiDTI/dataset/hard_dataset)
+  `<DATA>` train.csv
   
   - PreProcessed test dataset
   ```bash
   python preprocessed_dataset.py
   ```
-  `FILEPATH` [./dataset/hard_dataset](https://github.com/Njk-901aru/multiDTI/dataset/hard_dataset)
-  `DATA` test.csv
+  `<FILEPATH>` [./dataset/hard_dataset](https://github.com/Njk-901aru/multiDTI/dataset/hard_dataset)
+  `<DATA>` test.csv
   
   - Learn
   ```bash
