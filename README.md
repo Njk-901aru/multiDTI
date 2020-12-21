@@ -66,17 +66,17 @@ python omics_protein.py
   cd /path/to/multiDTI/dataset
   python preprocessed_dataset.py --input <FILEPATH> --data <DATA>
   ```
-  `<FILEPATH>` [./dataset/hard_dataset](https://github.com/Njk-901aru/multiDTI/dataset/hard_dataset)
+  `<FILEPATH>` './hard_dataset'
   
-  `<DATA>` train.csv
+  `<DATA>` './train'
   
   - PreProcessed test dataset
   ```bash
-  python preprocessed_dataset.py
+  python preprocessed_dataset.py --input <FILEPATH> --data <DATA>
   ```
-  `<FILEPATH>` [./dataset/hard_dataset](https://github.com/Njk-901aru/multiDTI/dataset/hard_dataset)
+  `<FILEPATH>` './hard_dataset'
   
-  `<DATA>` test.csv
+  `<DATA>` '/test'
   
   - Learn
   ```bash
