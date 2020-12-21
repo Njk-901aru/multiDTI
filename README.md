@@ -28,19 +28,19 @@ python preprocessed_dataset.py --input <INPUT_FILE>
 
 2. Apply node2vec to multi-interactome data
 
-node2vec model of chemical-chemical interaction data are already saved as [data_multi/modelcc.pickle](https://github.com/Njk-901aru/multiDTI/data_multi).
-node2vec model of protein-protein interaction data are already saved as [data_multi/modelpp.pickle](https://github.com/Njk-901aru/multiDTI/data_multi).
+node2vec model of chemical-chemical interaction data are already saved as [data_multi/modelcc.pickle](https://github.com/Njk-901aru/multiDTI/blob/master/data_multi).
+node2vec model of protein-protein interaction data are already saved as [data_multi/modelpp.pickle](https://github.com/Njk-901aru/multiDTI/blob/master/data_multi).
 
 construct graph network connecting compounds(proteins) interacting each other and apply the graph to node2vec here.
 
-2.1 run [omics_compound.py](https://github.com/Njk-901aru/multiDTI/data_multi/omics_compound.py)
+2.1 run [omics_compound.py](https://github.com/Njk-901aru/multiDTI/blob/master/data_multi/omics_compound.py)
 
 ```bash
 python omics_compound.py
 ```
 chemical_chemical_interaction.csv (multi-interactome data) is setteing as default input file.
 
-2.2 run [omics_protein.py](https://github.com/Njk-901aru/multiDTI/data_multi/omics_protein.py)
+2.2 run [omics_protein.py](https://github.com/Njk-901aru/multiDTI/blob/master/data_multi/omics_protein.py)
 
 ```bash
 python omics_protein.py
