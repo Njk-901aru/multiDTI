@@ -25,6 +25,7 @@ python preprocessed_dataset.py --input <INPUT_FILE>
 
 `<INPUT_FILE>` input file (only csv format is available)
 
+
 2. Apply node2vec to multi-interactome data
 
 node2vec model of chemical-chemical interaction data are already saved as [data_multi/modelcc.pickle](https://github.com/Njk-901aru/multiDTI/data_multi).
@@ -46,6 +47,7 @@ python omics_protein.py
 ```
 protein_protein_interaction.csv (multi-interactome data) is setteing as default input file.
 
+
 3. Learn and predict by integrate model
 
 
@@ -65,6 +67,7 @@ python omics_protein.py
   python preprocessed_dataset.py --input <FILEPATH> --data <DATA>
   ```
   `<FILEPATH>` [./dataset/hard_dataset](https://github.com/Njk-901aru/multiDTI/dataset/hard_dataset)
+  
   `<DATA>` train.csv
   
   - PreProcessed test dataset
@@ -72,6 +75,7 @@ python omics_protein.py
   python preprocessed_dataset.py
   ```
   `<FILEPATH>` [./dataset/hard_dataset](https://github.com/Njk-901aru/multiDTI/dataset/hard_dataset)
+  
   `<DATA>` test.csv
   
   - Learn
