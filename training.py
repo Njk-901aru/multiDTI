@@ -28,11 +28,11 @@ from chainer.optimizer_hooks import WeightDecay
 #-------------------------------------------------------------
  # featurevector size
 plensize= 20
-#------------------------------------------------------------- 
+#-------------------------------------------------------------
 def main():
-    
+
     START = time.time()
-    
+
     import argparse as arg
     parser = arg.ArgumentParser(description='ecfpWD_n2v')
     parser.add_argument('--gpu', '-g', type=int, default=1, help='GPU ID')
@@ -58,7 +58,8 @@ def main():
     parser.add_argument('--n_hid5', type=int, default=60)
     parser.add_argument('--n_out', type=int, default=1)
     parser.add_argument('--prosize', type=int, default=5762)
-    parser.add_argument('--input', '-i', default='./result_hard')
+    parser.add_argument('--input', '-i', default='./dataset/hard_dataset')
+    parser.add_argument('--output', '-o', default='./result/hard_dataset')
     parser.add_argument('--frequency', type=int, default=1)
     args = parser.parse_args(args=[])
 
@@ -66,7 +67,7 @@ def main():
     print('GPU: ', args.gpu)
     print('# Minibatch-size: ', args.batchsize)
     print('')
-    
+
     #-------------------------------
     # GPU check
     xp = np
@@ -79,16 +80,16 @@ def main():
     for i in range(5):
         #i = i+4
         print('Making Training dataset...')
-        ecfp = xp.load('./dataset/hard_dataset/cv_'+str(i)+'/train_fingerprint.npy')
+        ecfp = xp.load(args.input+'/cv_'+str(i)+'/train_fingerprint.npy')
         ecfp = xp.asarray(ecfp, dtype='float32').reshape(-1,1024)
 
-        file_interactions=xp.load('./dataset/hard_dataset/cv_'+str(i)+'/train_interaction.npy')
+        file_interactions=xp.load(args.input+'/cv_'+str(i)+'/train_interaction.npy')
         print('Loading labels: train_interaction.npy')
-        cID = xp.load('./dataset/hard_dataset/cv_'+str(i)+'/train_chemIDs.npy')
+        cID = xp.load(args.input+'/cv_'+str(i)+'/train_chemIDs.npy')
         print('Loading chemIDs: train_chemIDs.npy')
-        with open('./dataset/hard_dataset/cv_'+str(i)+'/train_proIDs.txt') as f:
+        with open(args.input+'/cv_'+str(i)+'/train_proIDs.txt') as f:
             pID = [s.strip() for s in f.readlines()]
-        print('Loading proIDs: train_proIDs.txt')  
+        print('Loading proIDs: train_proIDs.txt')
         n2v_c, n2v_p = [], []
         with open('./data_multi/modelpp.pickle', mode='rb') as f:
             modelpp = pickle.load(f)
@@ -98,14 +99,14 @@ def main():
             n2v_c.append(modelcc.wv[str(j)])
         for k in pID:
             n2v_p.append(modelpp.wv[k])
-        interactions = xp.asarray(file_interactions, dtype='int32').reshape(-1,args.n_out) 
+        interactions = xp.asarray(file_interactions, dtype='int32').reshape(-1,args.n_out)
         n2vc = np.asarray(n2v_c, dtype='float32').reshape(-1,128)
         n2vp = np.asarray(n2v_p, dtype='float32').reshape(-1,128)
         #reset memory
         del n2v_c, n2v_p, cID, pID, modelcc, modelpp, file_interactions
         gc.collect()
-        
-        file_sequences=xp.load('./dataset/hard_dataset/cv_'+str(i)+'/train_reprotein.npy')
+
+        file_sequences=xp.load(args.input+'/cv_'+str(i)+'/train_reprotein.npy')
         print('Loading sequences: train_reprotein.npy', flush=True)
         sequences = xp.asarray(file_sequences, dtype='float32').reshape(-1,1,args.prosize,plensize)
         # reset memory
@@ -113,23 +114,23 @@ def main():
         gc.collect()
 
         print(interactions.shape, ecfp.shape, sequences.shape, n2vc.shape, n2vp.shape, flush=True)
-        
+
         print('Now concatenating...', flush=True)
         train_dataset = datasets.TupleDataset(ecfp, sequences, n2vc, n2vp, interactions)
         n = int(0.8 * len(train_dataset))
         train_dataset, valid_dataset = train_dataset[:n], train_dataset[n:]
         print('train: ', len(train_dataset), flush=True)
         print('valid: ', len(valid_dataset), flush=True)
-        
+
         print('pattern: ', i, flush=True)
-        output_dir = args.input+'/'+'ecfpN2vc_mSGD'+'/'+'pattern'+str(i)
+        output_dir = args.output+'/'+'ecfpN2vc_mSGD'+'/'+'pattern'+str(i)
         os.makedirs(output_dir)
-        
+
         #-------------------------------
         #reset memory again
         del n, sequences, interactions, ecfp, n2vc, n2vp
         gc.collect()
-        
+
         #-------------------------------
         # Set up a neural network to train
         print('Set up a neural network to train', flush=True)
@@ -140,18 +141,18 @@ def main():
             chainer.cuda.get_device_from_id(args.gpu).use()
             model.to_gpu()  # Copy the model to the GPU
         #-------------------------------
-        # Setup an optimizer 
+        # Setup an optimizer
         optimizer = chainer.optimizers.MomentumSGD(lr=0.01, momentum=0.9)
         optimizer.setup(model)
         #-------------------------------
-        # L2 regularization(weight decay) 
+        # L2 regularization(weight decay)
         for param in model.params():
             if param.name != 'b':  # バイアス以外だったら
                 param.update_rule.add_hook(WeightDecay(0.00001))  # 重み減衰を適用
-        #-------------------------------      
+        #-------------------------------
         # Set up a trainer
         print('Trainer is setting up...', flush=True)
-        
+
         train_iter = chainer.iterators.SerialIterator(train_dataset, batch_size= args.batchsize, shuffle=True)
         test_iter = chainer.iterators.SerialIterator(valid_dataset, batch_size= args.batchsize, repeat=False, shuffle=True)
         updater = training.StandardUpdater(train_iter, optimizer, device=args.gpu)
@@ -160,7 +161,7 @@ def main():
         trainer.extend(extensions.Evaluator(test_iter, model, device=args.gpu))
         # Take a snapshot for each specified epoch
         trainer.extend(extensions.snapshot_object(model, 'model_snapshot_{.updater.epoch}'), trigger=(args.frequency,'epoch'))
-        # Write a log of evaluation statistics for each epoch    
+        # Write a log of evaluation statistics for each epoch
         trainer.extend(extensions.LogReport(trigger=(1, 'epoch'), log_name='log_epoch'))
         trainer.extend(extensions.LogReport(trigger=(10, 'iteration'), log_name='log_iteration'))
         # Print selected entries of the log to stdout
@@ -170,20 +171,19 @@ def main():
         trainer.extend(extensions.PlotReport(['main/accuracy', 'validation/main/accuracy'], x_key='epoch', file_name='accuracy.png'))
         # Print a progress bar to stdout
         trainer.extend(extensions.ProgressBar())
-        
+
         # Run the training
         trainer.run()
-        
+
         END = time.time()
         print('Nice, your Learning Job is done.　Total time is {} sec．'.format(END-START))
-        
+
         del model, train_iter, test_iter, updater, trainer
         gc.collect()
-    
-#-------------------------------      
-# Model Fegure    
 
-#------------------------------- 
+#-------------------------------
+# Model Fegure
+
+#-------------------------------
 if __name__ == '__main__':
     main()
-
